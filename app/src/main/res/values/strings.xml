@@ -4,4 +4,23 @@
     <string name="button_add_state_1">添加</string>
     <string name="button_add_state_2">完成</string>
     <string name="tip_error">Error</string>
+    <string name="prefix_lel">LEL:</string>
+    <string name="prefix_uel">UEL:</string>
+    <string name="prefix_vf">VF:</string>
+    <string name="prefix_formula">Formula:</string>
+    <string name="prefix_type">Type:</string>
+    <string name="type_air">Air</string>
+    <string name="type_noble_gas">Noble Gas</string>
+    <string name="type_combustible_gas">Combustible Gas</string>
+    <string name="create_item_tips">注意!化学式下标后必须加/</string>
+    <string name="button_save">保存</string>
+    <string name="button_close">直接关闭</string>
+    <string name="button_complete">完成</string>
+    <string name="text_lel_hint">m%</string>
+    <string name="text_uel_hint">n%</string>
+    <string name="text_formula_hint">CO2/</string>
+    <string name="default_value">0.0</string>
+    <string name="text_formula_filter">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/</string>
+    <string name="text_volume_hint">x%</string>
+    <string name="button_cancel">取消</string>
 </resources>

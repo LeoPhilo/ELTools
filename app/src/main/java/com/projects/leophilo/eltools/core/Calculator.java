@@ -57,20 +57,17 @@ public class Calculator {
         List<NormalCompositionItemEntity> copyList = new ArrayList<>(what);
         float nobleSum = 0;
         for (NormalCompositionItemEntity e : what) {
-            switch (e.getFormula()) {
-                case Elements.NobleGas.CO2:
-                case Elements.NobleGas.N2:
-                case Elements.NobleGas.H2O:
-                    copyList.remove(e);
-                    sum -= e.getValue();
-                    nobleSum += e.getValue();
+            if (e.getType() == Elements.Type.NobleGas) {
+                copyList.remove(e);
+                sum -= e.getValue();
+                nobleSum += e.getValue();
             }
         }
 
         ELData data = calculateNoAirNoNoble(copyList, sum);
         float LEL = data.getLEL();
         float UEL = data.getUEL();
-        float noble = nobleSum / (100 - nobleSum);
+        float noble = nobleSum == 100 ? 0 : nobleSum / (100 - nobleSum);
         LEL = LEL * (1 + noble) * 100 / (100 + LEL * noble);
         UEL = UEL * (1 + noble) * 100 / (100 + UEL * noble);
         copyList.clear();

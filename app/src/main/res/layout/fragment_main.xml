@@ -39,12 +39,13 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <AutoCompleteTextView
-            android:id="@+id/text_formula"
+            android:id="@+id/textFormula"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
+            android:digits="@string/text_formula_filter"
             android:layout_weight="3"
-            android:hint="化学式"
+            android:hint="@string/text_formula_hint"
             android:maxLines="1"
             android:textColor="@android:color/white" />
 
@@ -54,7 +55,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
             android:layout_weight="2"
-            android:hint="体积分数%"
+            android:hint="@string/text_volume_hint"
             android:inputType="numberDecimal"
             android:textColor="@android:color/white" />
 

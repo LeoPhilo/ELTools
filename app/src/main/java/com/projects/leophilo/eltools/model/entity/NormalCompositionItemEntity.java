@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Unique;
 
 @Entity(nameInDb = "Normal")
 public class NormalCompositionItemEntity implements Parcelable, Comparable<NormalCompositionItemEntity> {
@@ -14,6 +15,7 @@ public class NormalCompositionItemEntity implements Parcelable, Comparable<Norma
     @Id
     private Long id;
 
+    @Unique
     private String formula;
     private String name;
     private int type;

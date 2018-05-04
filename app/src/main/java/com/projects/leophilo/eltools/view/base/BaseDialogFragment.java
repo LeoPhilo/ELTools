@@ -27,17 +27,6 @@ public abstract class BaseDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            if (null != dialog.getWindow())
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

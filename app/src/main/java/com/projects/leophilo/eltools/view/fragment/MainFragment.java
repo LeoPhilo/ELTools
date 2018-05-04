@@ -1,13 +1,10 @@
 package com.projects.leophilo.eltools.view.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,15 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.projects.leophilo.eltools.R;
 import com.projects.leophilo.eltools.core.Calculator;
-import com.projects.leophilo.eltools.model.entity.HistoryResultEntity;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntity;
-import com.projects.leophilo.eltools.model.greendao.GreenDaoHelper;
 import com.projects.leophilo.eltools.view.adapter.EditBarAutoAdapter;
 import com.projects.leophilo.eltools.view.adapter.MainListAdapter;
 import com.projects.leophilo.eltools.view.base.BaseFragment;
+import com.projects.leophilo.eltools.view.dialog.CreateItemDialog;
 import com.projects.leophilo.eltools.view.dialog.ResultDetailDialog;
 import com.projects.leophilo.eltools.view.presenter.MainPresenter;
 import com.projects.leophilo.eltools.view.presenter.contact.MainContact;
@@ -39,7 +34,7 @@ public class MainFragment extends BaseFragment implements MainContact.View {
 
     @BindView(R.id.list_view)
     RecyclerView lv;
-    @BindView(R.id.text_formula)
+    @BindView(R.id.textFormula)
     AutoCompleteTextView formulaText;
     @BindView(R.id.text_volume)
     EditText volumeText;
@@ -172,7 +167,8 @@ public class MainFragment extends BaseFragment implements MainContact.View {
     }
 
     private void showCreateDialog() {
-
+        CreateItemDialog dialog = CreateItemDialog.newInstance(formulaText.getText().toString());
+        dialog.show(getChildFragmentManager(), CreateItemDialog.TAG);
     }
 
     @Override

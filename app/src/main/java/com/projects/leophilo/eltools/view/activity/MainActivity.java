@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import com.projects.leophilo.eltools.R;
 import com.projects.leophilo.eltools.view.base.BaseActivity;
+import com.projects.leophilo.eltools.view.dialog.CreateItemDialog;
 import com.projects.leophilo.eltools.view.fragment.MainFragment;
 
 public class MainActivity extends BaseActivity {
@@ -40,8 +41,6 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_operation_history:
-//                ResultDetailDialog dialog = ResultDetailDialog.newInstance();
-//                dialog.show(getSupportFragmentManager(), TAG);
                 showHistory();
                 break;
         }
