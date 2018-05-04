@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ELTools</string>
+    <string name="menu_operation_history">历史记录</string>
+    <string name="button_add_state_1">添加</string>
+    <string name="button_add_state_2">完成</string>
+    <string name="tip_error">Error</string>
+</resources>
