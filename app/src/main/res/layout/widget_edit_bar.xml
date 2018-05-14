@@ -1,36 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/edit_bar"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="4dp"
+    android:gravity="center"
     android:orientation="horizontal"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
     android:weightSum="6">
 
+    <ImageButton
+        android:id="@+id/button_shrink"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:background="@color/colorAir"
+        android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
+
     <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="2"
+        android:id="@+id/textFormula"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
+        android:layout_weight="2.5"
+        android:digits="@string/text_formula_filter"
+        android:hint="@string/text_formula_hint"
         android:maxLines="1"
-        android:hint="Chemical Formula"
         android:textColor="@android:color/white" />
 
     <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="8dp"
-        android:ems="10"
+        android:id="@+id/text_volume"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="4dp"
         android:layout_weight="2"
-        android:hint="Volume Fraction"
+        android:hint="@string/text_volume_hint"
         android:inputType="numberDecimal"
         android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="@string/button_add"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 
 </LinearLayout>

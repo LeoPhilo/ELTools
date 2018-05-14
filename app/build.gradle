@@ -38,4 +38,5 @@ dependencies {
     implementation 'org.greenrobot:greendao:3.2.2' // add library
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.38'
     implementation 'com.google.code.gson:gson:2.8.3'
+    implementation 'com.github.rubensousa:floatingtoolbar:1.5.1'
 }

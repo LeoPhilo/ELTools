@@ -3,8 +3,10 @@ package com.projects.leophilo.eltools.view.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,13 +14,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
 import com.projects.leophilo.eltools.R;
 import com.projects.leophilo.eltools.core.Calculator;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntity;
 import com.projects.leophilo.eltools.view.adapter.EditBarAutoAdapter;
 import com.projects.leophilo.eltools.view.adapter.MainListAdapter;
+import com.projects.leophilo.eltools.view.anim.AnimHelper;
 import com.projects.leophilo.eltools.view.base.BaseFragment;
 import com.projects.leophilo.eltools.view.dialog.CreateItemDialog;
 import com.projects.leophilo.eltools.view.dialog.ResultDetailDialog;
@@ -40,64 +45,18 @@ public class MainFragment extends BaseFragment implements MainContact.View {
     EditText volumeText;
     @BindView(R.id.button_add)
     Button addBtn;
+    @BindView(R.id.floatingToolbar)
+    FloatingToolbar floatingToolbar;
+    @BindView(R.id.fab)
+    FloatingActionButton floatingActionButton;
 
-    private MainListAdapter adapter;
     private MainPresenter presenter;
-    private View.OnClickListener onCreateBarClickListener;
+    private AlertDialog createTipDialog;
 
+    // TODO: View层初始化部分***********************
 
-    @OnClick(R.id.button_add)
-    public void add() {
-        switch (addBtn.getText().toString()) {
-            //defined in R.Strings.xml
-            case "添加":
-                boolean pass = presenter.checkEditBarData(volumeText.getText().toString());
-
-                if (!pass) return;
-
-                float volume = Float.parseFloat(volumeText.getText().toString());
-
-                presenter.addNewItem(formulaText.getText().toString(), volume);
-
-                adapter.notifyItemInserted(presenter.getCompositionItemEntities().size() - 1);
-                adapter.notifyDataSetChanged();
-                lv.smoothScrollToPosition(adapter.getItemCount() - 1);
-                break;
-            case "完成":
-                final ArrayList<NormalCompositionItemEntity> entities = presenter.getCompositionItemEntities();
-                if (entities != null) {
-                    Calculator.calculate(entities, new Calculator.OnCalculateCallBack() {
-                        @Override
-                        public void onResult(final Calculator.ELData result, final float sum) {
-                            if (null != MainFragment.this.getActivity())
-                                MainFragment.this.getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-//                                        progressBar.setVisibility(View.GONE);
-//                                        tipsTV.setVisibility(View.GONE);
-
-                                        ResultDetailDialog dialog = ResultDetailDialog.newInstance(
-                                                result.getLEL()
-                                                , result.getUEL()
-                                                , sum
-                                                , entities);
-
-                                        dialog.show(getChildFragmentManager(), ResultDetailDialog.TAG);
-                                        dialog.setDismissListener(new DialogInterface.OnDismissListener() {
-                                            @Override
-                                            public void onDismiss(DialogInterface dialog) {
-                                                presenter.calculateComplete();
-                                            }
-                                        });
-                                    }
-                                });
-                        }
-                    });
-                }
-                break;
-        }
+    public MainFragment() {
     }
-
 
     public static MainFragment newInstance() {
 
@@ -109,13 +68,29 @@ public class MainFragment extends BaseFragment implements MainContact.View {
     }
 
     @Override
+    protected int attachLayoutRes() {
+        return R.layout.fragment_main;
+    }
+
+    @Override
     protected void startEvent() {
         this.presenter = new MainPresenter();
         presenter.attachView(this);
 
         initList();
-
+        initFab();
         initEditBar();
+    }
+
+    private void initFab() {
+        floatingToolbar.attachFab(floatingActionButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //与操作状态相关的点击事件交由MainPresenter管理
+                presenter.callOnFabClick();
+            }
+        });
     }
 
     private void initEditBar() {
@@ -123,13 +98,12 @@ public class MainFragment extends BaseFragment implements MainContact.View {
 
         formulaText.setThreshold(1);
         formulaText.setAdapter(adapter);
-
     }
 
     private void initList() {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
 
-        adapter = new MainListAdapter(R.layout.item_main_recycler, presenter.getCompositionItemEntities());
+        MainListAdapter adapter = presenter.initAdapter();
 
         lv.setHasFixedSize(true);
         lv.setAdapter(adapter);
@@ -138,37 +112,105 @@ public class MainFragment extends BaseFragment implements MainContact.View {
         adapter.setEmptyView(R.layout.view_empty_list, lv);
     }
 
-
     @Override
-    protected int attachLayoutRes() {
-        return R.layout.fragment_main;
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.detachView();
+    }
+
+    // TODO: View协议接口实现部分**************************
+
+    @OnClick(R.id.button_shrink)
+    void shrinkEditBar() {
+        floatingToolbar.hide();
+    }
+
+    @OnClick(R.id.button_add)
+    void add() {
+        boolean pass = presenter.checkEditBarData(volumeText.getText().toString());
+
+        if (!pass) return;
+
+        float volume = Float.parseFloat(volumeText.getText().toString());
+
+        presenter.addNewItem(formulaText.getText().toString(), volume);
     }
 
     @Override
-    public void showToast(@NonNull String msg) {
+    public void showToast(@NonNull final String msg) {
         if (null != this.getActivity())
-            Toast.makeText(
-                    this.getActivity().getApplicationContext()
-                    , msg
-                    , Toast.LENGTH_SHORT).show();
+            this.getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(
+                            MainFragment.this.getActivity()
+                            , msg
+                            , Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     @Override
-    public void showCreateBar() {
-        if (null == onCreateBarClickListener)
-            onCreateBarClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showCreateDialog();
-                }
-            };
-        Snackbar.make(lv, "未查询到此成分信息", Snackbar.LENGTH_SHORT)
-                .setAction("创建", onCreateBarClickListener).show();
+    public void showCreateTip() {
+        if (null == getActivity()) return;
+        if (null == createTipDialog) {
+            createTipDialog =
+                    new AlertDialog
+                            .Builder(getActivity())
+                            .setMessage("未查询到此成分信息, 需要创建新的成分信息吗?")
+                            .setPositiveButton("创建", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    showCreateDialogImpl();
+                                }
+                            })
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .create();
+        }
+        if (!createTipDialog.isShowing()) {
+            createTipDialog.show();
+        }
     }
 
-    private void showCreateDialog() {
+    private void showCreateDialogImpl() {
         CreateItemDialog dialog = CreateItemDialog.newInstance(formulaText.getText().toString());
         dialog.show(getChildFragmentManager(), CreateItemDialog.TAG);
+    }
+
+    @Override
+    public void showEditBar() {
+        floatingToolbar.show();
+    }
+
+    @Override
+    public void showResult(final Calculator.ELData result, final float sum, final ArrayList<NormalCompositionItemEntity> entities) {
+        if (null == getActivity()) return;
+        ResultDetailDialog dialog = ResultDetailDialog.newInstance(
+                result.getLEL()
+                , result.getUEL()
+                , sum
+                , entities);
+
+        dialog.show(getChildFragmentManager(), ResultDetailDialog.TAG);
+        dialog.setDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                presenter.calculateComplete();
+            }
+        });
+    }
+
+    @Override
+    public void showManagingStateChangeAnim(View itemView, int itemType, boolean expectToDelete) {
+        floatingToolbar.hide();
+        FrameLayout logoView = itemView.findViewById(R.id.logo);
+        if (null == getContext() || null == logoView) return;
+        AnimHelper.getInstance().animMainItemStateChange(getContext(), logoView, expectToDelete, itemType);
     }
 
     @Override
@@ -177,29 +219,22 @@ public class MainFragment extends BaseFragment implements MainContact.View {
     }
 
     @Override
-    public void resetEditBar() {
-        formulaText.setVisibility(View.VISIBLE);
-        volumeText.setVisibility(View.VISIBLE);
+    public void resetEditBar(boolean requestFocus) {
         formulaText.setText("");
         volumeText.setText("");
-        addBtn.setText(R.string.button_add_state_1);
-        formulaText.requestFocus();
-    }
+        if (requestFocus)
+            formulaText.requestFocus();
+        else {
+            hideSoftInput();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    floatingActionButton.setImageResource(R.drawable.ic_check_black_24dp);
+                    floatingToolbar.hide();
+                }
+            }, 500);
 
-    @Override
-    public void editComplete() {
-        formulaText.setText("");
-        volumeText.setText("");
-        hideSoftInput();
-        formulaText.setVisibility(View.GONE);
-        volumeText.setVisibility(View.GONE);
-        addBtn.setText(R.string.button_add_state_2);
-    }
-
-    @Override
-    public void resetAll() {
-        resetEditBar();
-        adapter.notifyDataSetChanged();
+        }
     }
 
     private void hideSoftInput() {
@@ -215,8 +250,32 @@ public class MainFragment extends BaseFragment implements MainContact.View {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        presenter.detachView();
+    public void reEditItem(NormalCompositionItemEntity entity) {
+        if (!floatingToolbar.isShowing()) floatingToolbar.show();
+        formulaText.setText(entity.getFormula());
+        volumeText.setText(String.valueOf(entity.getValue()));
+        volumeText.requestFocus();
     }
+
+    @Override
+    public void notifyEditStateChanged(final int state) {
+        if (null == getActivity()) return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                switch (state) {
+                    case MainPresenter.editState_editing:
+                        floatingActionButton.setImageResource(R.drawable.ic_add_black_24dp);
+                        break;
+                    case MainPresenter.editState_complete:
+                        floatingActionButton.setImageResource(R.drawable.ic_check_black_24dp);
+                        break;
+                    case MainPresenter.editState_managing:
+                        floatingActionButton.setImageResource(R.drawable.ic_delete_black_24dp);
+                        break;
+                }
+            }
+        });
+    }
+
 }

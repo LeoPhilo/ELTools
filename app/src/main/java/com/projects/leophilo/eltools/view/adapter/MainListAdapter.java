@@ -3,6 +3,7 @@ package com.projects.leophilo.eltools.view.adapter;
 import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +33,11 @@ public class MainListAdapter extends BaseQuickAdapter<NormalCompositionItemEntit
             SpannableStringBuilder formula = ChemicalTool.toChemicalFormula(name);
             helper.formula.setText(formula);
             helper.value.setText(value);
-            if (null != helper.logoBg && null != helper.logoText) {
+            if (null != helper.logoBg && null != helper.logoText && null != helper.deleteBtn) {
+                if (helper.logoText.getVisibility() == View.GONE) {
+                    helper.logoText.setVisibility(View.VISIBLE);
+                    helper.deleteBtn.setVisibility(View.GONE);
+                }
                 switch (item.getType()) {
                     case Elements.Type.Air:
                         helper.logoBg.setBackgroundResource(R.drawable.bg_air);
@@ -66,6 +71,9 @@ public class MainListAdapter extends BaseQuickAdapter<NormalCompositionItemEntit
         @Nullable
         @BindView(R.id.logo_txt)
         TextView logoText;
+        @Nullable
+        @BindView(R.id.button_delete)
+        ImageButton deleteBtn;
 
         public MyViewHolder(View view) {
             super(view);

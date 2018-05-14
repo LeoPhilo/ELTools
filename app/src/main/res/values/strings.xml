@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">ELTools</string>
     <string name="menu_operation_history">历史记录</string>
-    <string name="button_add_state_1">添加</string>
-    <string name="button_add_state_2">完成</string>
+    <string name="button_add">添加</string>
     <string name="tip_error">Error</string>
     <string name="prefix_lel">LEL:</string>
     <string name="prefix_uel">UEL:</string>
@@ -23,4 +22,6 @@
     <string name="text_formula_filter">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/</string>
     <string name="text_volume_hint">x%</string>
     <string name="button_cancel">取消</string>
+    <string name="menu_operation_delete">删除</string>
+    <string name="menu_operation_edit">编辑</string>
 </resources>

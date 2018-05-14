@@ -72,7 +72,7 @@ public class CreateItemDialog extends BaseDialogFragment {
     }
 
     private void checkFormula() {
-        checkPass = !TextUtils.isEmpty(textFormula.getText().toString());
+        checkPass = !TextUtils.isEmpty(textFormula.getText().toString()) && checkPass;
     }
 
     private void checkValue() {

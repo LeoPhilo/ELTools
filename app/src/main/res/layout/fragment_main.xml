@@ -1,77 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/edit_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimaryDark"
-        app:layout_constraintBottom_toTopOf="@+id/edit_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <LinearLayout
-        android:id="@+id/edit_bar"
+    <com.github.rubensousa.floatingtoolbar.FloatingToolbar
+        android:id="@+id/floatingToolbar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/colorPrimary"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp"
-        android:weightSum="6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_gravity="bottom"
+        app:floatingCustomView="@layout/widget_edit_bar"/>
 
-        <AutoCompleteTextView
-            android:id="@+id/textFormula"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="4dp"
-            android:digits="@string/text_formula_filter"
-            android:layout_weight="3"
-            android:hint="@string/text_formula_hint"
-            android:maxLines="1"
-            android:textColor="@android:color/white" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_add_black_24dp"
+        app:fabSize="normal"/>
 
-        <EditText
-            android:id="@+id/text_volume"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="2"
-            android:hint="@string/text_volume_hint"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white" />
-
-        <Button
-            android:id="@+id/button_add"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:text="@string/button_add_state_1"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="18sp" />
-
-
-    </LinearLayout>
-
-
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>

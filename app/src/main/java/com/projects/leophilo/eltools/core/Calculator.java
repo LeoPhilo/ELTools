@@ -25,26 +25,37 @@ public class Calculator {
                 //空气氮氧比例
                 float AirNDO = 78.0f / 21;
 
+                boolean hasO2 = false;
+                boolean hasN2 = false;
                 for (NormalCompositionItemEntity e : what) {
                     switch (e.getFormula()) {
                         case Elements.O2:
+                            hasO2 = true;
+                            //从混合气体成分中剔除氧气
                             sum -= e.getValue();
+                            //混合气体空气基中氮气所占体积分数
                             airN = e.getValue() * AirNDO;
                             copyList.remove(e);
                             break;
                         case Elements.NobleGas.N2:
+                            hasN2 = true;
                             NormalCompositionItemEntity copy = e.simpleCopy();
                             if (airN <= e.getValue()) {
                                 sum -= airN;
                                 copy.setValue(e.getValue() - airN);
                             } else {
-                                sum -= e.getValue();
-                                copy.setValue(0);
+                                callBack.onError("空气基氮气含量不足");
+                                return;
                             }
                             copyList.remove(e);
                             copyList.add(copy);
                             break;
                     }
+                }
+
+                if (hasO2 && !hasN2) {
+                    callBack.onError("空气基氮气含量不足");
+                    return;
                 }
 
                 ELData result = calculateNoAir(copyList, sum);
@@ -107,5 +118,7 @@ public class Calculator {
 
     public interface OnCalculateCallBack {
         void onResult(ELData result, float sum);
+
+        void onError(String description);
     }
 }
