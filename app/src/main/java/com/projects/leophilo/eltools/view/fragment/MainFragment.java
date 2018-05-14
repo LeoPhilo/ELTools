@@ -131,7 +131,7 @@ public class MainFragment extends BaseFragment implements MainContact.View {
 
         if (!pass) return;
 
-        float volume = Float.parseFloat(volumeText.getText().toString());
+        double volume = Double.parseDouble(volumeText.getText().toString());
 
         presenter.addNewItem(formulaText.getText().toString(), volume);
     }
@@ -188,12 +188,12 @@ public class MainFragment extends BaseFragment implements MainContact.View {
     }
 
     @Override
-    public void showResult(final Calculator.ELData result, final float sum, final ArrayList<NormalCompositionItemEntity> entities) {
+    public void showResult(final Calculator.ELData result, final double sum, final ArrayList<NormalCompositionItemEntity> entities) {
         if (null == getActivity()) return;
         ResultDetailDialog dialog = ResultDetailDialog.newInstance(
-                result.getLEL()
-                , result.getUEL()
-                , sum
+                Double.toString(result.getLEL()),
+                Double.toString(result.getUEL()),
+                Double.toString(sum)
                 , entities);
 
         dialog.show(getChildFragmentManager(), ResultDetailDialog.TAG);

@@ -7,13 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.projects.leophilo.eltools.R;
-import com.projects.leophilo.eltools.core.Calculator;
 import com.projects.leophilo.eltools.model.entity.HistoryResultEntity;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntity;
 import com.projects.leophilo.eltools.model.greendao.GreenDaoHelper;
@@ -59,22 +57,22 @@ public class ResultDetailDialog extends BaseDialogFragment {
         this.getDialog().dismiss();
     }
 
-    private float LEL;
-    private float UEL;
-    private float sum;
+    private String LEL;
+    private String UEL;
+    private String sum;
     private ArrayList<NormalCompositionItemEntity> entities;
     private boolean hideSaveAction;
     private DialogInterface.OnDismissListener dismissListener;
 
     public static ResultDetailDialog newInstance(
-            float lel, float uel, float sum, ArrayList<NormalCompositionItemEntity> entities) {
+            String lel, String uel, String sum, ArrayList<NormalCompositionItemEntity> entities) {
 
         Bundle args = new Bundle();
 
         ResultDetailDialog fragment = new ResultDetailDialog();
-        args.putFloat("LEL", lel);
-        args.putFloat("UEL", uel);
-        args.putFloat("SUM", sum);
+        args.putString("LEL", lel);
+        args.putString("UEL", uel);
+        args.putString("SUM", sum);
         args.putParcelableArrayList("LIST", entities);
         fragment.setArguments(args);
         return fragment;
@@ -100,21 +98,18 @@ public class ResultDetailDialog extends BaseDialogFragment {
         Bundle args = getArguments();
 
         if (args != null) {
-            LEL = args.getFloat("LEL");
-            UEL = args.getFloat("UEL");
-            sum = args.getFloat("SUM");
-            String LELStr = LEL + "%";
-            String UELStr = UEL + "%";
-            String sumStr = sum + "%";
+            LEL = args.getString("LEL") + "%";
+            UEL = args.getString("UEL") + "%";
+            sum = args.getString("SUM") + "%";
             entities = args.getParcelableArrayList("LIST");
 
             if (entities != null) {
                 Collections.sort(entities);
             }
 
-            textLEL.setText(LELStr);
-            textUEL.setText(UELStr);
-            textVolume.setText(sumStr);
+            textLEL.setText(LEL);
+            textUEL.setText(UEL);
+            textVolume.setText(sum);
 
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
 

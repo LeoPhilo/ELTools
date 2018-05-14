@@ -16,7 +16,7 @@ public interface MainContact extends BaseContact {
         void showToast(@NonNull String msg);
         void showCreateTip();
         void showEditBar();
-        void showResult(final Calculator.ELData result, final float sum, ArrayList<NormalCompositionItemEntity> entities);
+        void showResult(final Calculator.ELData result, final double sum, ArrayList<NormalCompositionItemEntity> entities);
         void showManagingStateChangeAnim(android.view.View itemView, int itemType, boolean expectToDelete);
         void updateVolumeTextView(String updateData);
         void resetEditBar(boolean requestFocus);
@@ -25,7 +25,7 @@ public interface MainContact extends BaseContact {
     }
 
     interface Presenter extends BaseContact.IPresenter<View> {
-        void addNewItem(@NonNull String formula, float volume);
+        void addNewItem(@NonNull String formula, double volume);
         boolean checkEditBarData(String volumeStr);
         void calculateComplete();
         MainListAdapter initAdapter();

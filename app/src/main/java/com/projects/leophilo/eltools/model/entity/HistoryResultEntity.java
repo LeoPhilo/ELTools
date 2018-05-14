@@ -12,12 +12,12 @@ public class HistoryResultEntity {
 
     @Id
     private Long id;
-    private float LEL;
-    private float UEL;
-    private float sum;
+    private String LEL;
+    private String UEL;
+    private String sum;
     private String detail;
-    @Generated(hash = 729260748)
-    public HistoryResultEntity(Long id, float LEL, float UEL, float sum,
+    @Generated(hash = 63707697)
+    public HistoryResultEntity(Long id, String LEL, String UEL, String sum,
             String detail) {
         this.id = id;
         this.LEL = LEL;
@@ -34,22 +34,22 @@ public class HistoryResultEntity {
     public void setId(Long id) {
         this.id = id;
     }
-    public float getLEL() {
+    public String getLEL() {
         return this.LEL;
     }
-    public void setLEL(float LEL) {
+    public void setLEL(String LEL) {
         this.LEL = LEL;
     }
-    public float getUEL() {
+    public String getUEL() {
         return this.UEL;
     }
-    public void setUEL(float UEL) {
+    public void setUEL(String UEL) {
         this.UEL = UEL;
     }
-    public float getSum() {
+    public String getSum() {
         return this.sum;
     }
-    public void setSum(float sum) {
+    public void setSum(String sum) {
         this.sum = sum;
     }
     public String getDetail() {
@@ -58,5 +58,7 @@ public class HistoryResultEntity {
     public void setDetail(String detail) {
         this.detail = detail;
     }
+
+
 
 }

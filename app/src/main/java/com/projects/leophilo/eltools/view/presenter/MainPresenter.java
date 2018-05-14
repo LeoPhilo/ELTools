@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.projects.leophilo.eltools.R;
+import com.projects.leophilo.eltools.core.Arith;
 import com.projects.leophilo.eltools.core.Calculator;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntity;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntityDao;
@@ -26,7 +27,7 @@ public class MainPresenter extends BasePresenter<MainContact.View> implements Ma
     private MainListAdapter adapter;
     private ArrayList<NormalCompositionItemEntity> mExpectToDeleteEntities;
     private ArrayList<Integer> mExpectToDeleteEntitiesPositions;
-    private float sum = 0;
+    private double sum = 0;
     private int currentEditState;
     public static final int editState_editing = 0x1;
     public static final int editState_complete = 0x2;
@@ -49,7 +50,7 @@ public class MainPresenter extends BasePresenter<MainContact.View> implements Ma
     }
 
     @Override
-    public void addNewItem(@NonNull String formula, float volume) {
+    public void addNewItem(@NonNull String formula, double volume) {
         if (null == query)
             query = GreenDaoHelper.getDaoSession()
                     .getNormalCompositionItemEntityDao().queryBuilder()
@@ -64,7 +65,7 @@ public class MainPresenter extends BasePresenter<MainContact.View> implements Ma
             return;
         }
 
-        sum += volume;
+        sum = Arith.add(sum, volume);
         boolean containsEntity = adapter.getData().contains(entityToAdd);
         entityToAdd.setValue(volume);
         if (containsEntity) {
@@ -94,14 +95,14 @@ public class MainPresenter extends BasePresenter<MainContact.View> implements Ma
             return false;
         }
 
-        float value = Float.parseFloat(volumeStr);
-        float nSum = sum + value;
+        double value = Double.parseDouble(volumeStr);
+        double nSum = Arith.add(sum, value);
         if (nSum > 100) {
             value = value + 100 - nSum;
-            value = new BigDecimal(value).setScale(3, RoundingMode.HALF_UP).floatValue();
-            volumeStr = value + "";
-            mView.updateVolumeTextView(volumeStr);
         }
+        value = Arith.round(value, Calculator.DecimalScale);
+        volumeStr = value + "";
+        mView.updateVolumeTextView(volumeStr);
         return true;
     }
 
@@ -144,18 +145,18 @@ public class MainPresenter extends BasePresenter<MainContact.View> implements Ma
                 mView.showEditBar();
                 break;
             case editState_complete:
-                    Calculator.calculate(adapter.getData(), new Calculator.OnCalculateCallBack() {
-                        @Override
-                        public void onResult(Calculator.ELData result, float sum) {
-                            mView.showResult(result, sum, (ArrayList<NormalCompositionItemEntity>) adapter.getData());
-                        }
+                Calculator.calculate(adapter.getData(), new Calculator.OnCalculateCallBack() {
+                    @Override
+                    public void onResult(Calculator.ELData result, double sum) {
+                        mView.showResult(result, sum, (ArrayList<NormalCompositionItemEntity>) adapter.getData());
+                    }
 
-                        @Override
-                        public void onError(String description) {
-                            mView.showToast(description);
-                            checkEditState(editState_editing);
-                        }
-                    });
+                    @Override
+                    public void onError(String description) {
+                        mView.showToast(description);
+                        checkEditState(editState_editing);
+                    }
+                });
                 break;
             case editState_managing:
                 adapter.getData().removeAll(mExpectToDeleteEntities);
@@ -176,7 +177,7 @@ public class MainPresenter extends BasePresenter<MainContact.View> implements Ma
         switch (currentEditState) {
             case editState_editing:
             case editState_complete:
-                sum -= adapter.getData().get(position).getValue();
+                sum = Arith.sub(sum, adapter.getData().get(position).getValue());
                 checkEditState(editState_editing);
                 mView.reEditItem(adapter.getData().get(position));
                 break;
