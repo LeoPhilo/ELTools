@@ -24,4 +24,6 @@
     <string name="button_cancel">取消</string>
     <string name="menu_operation_delete">删除</string>
     <string name="menu_operation_edit">编辑</string>
+    <string name="menu_operation_pressure">调整压力</string>
+    <string name="menu_operation_temperature">调整温度</string>
 </resources>

@@ -8,9 +8,15 @@ import java.util.List;
 
 public class Calculator {
 
-    public static final int DecimalScale = 4;
+    public static final String TEMPERATURE = "temperature";
+    public static final String PRESSURE = "pressure";
+    public static final int DecimalScale = 3;
 
-    public static void calculate(final List<NormalCompositionItemEntity> what, final OnCalculateCallBack callBack) {
+    public static void calculate(
+            final double temperature,
+            final double pressure,
+            final List<NormalCompositionItemEntity> what,
+            final OnCalculateCallBack callBack) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -58,8 +64,31 @@ public class Calculator {
                     return;
                 }
 
-                ELData result = calculateNoAir(copyList, sum);
-                callBack.onResult(result, Arith.round(sum, DecimalScale));
+                ELData data = calculateNoAir(copyList, sum);
+
+                if (temperature > 25) {
+                    data.LEL = Arith.mul(
+                            data.LEL, Arith.sub(1, Arith.mul(
+                                    0.0008, Arith.sub(temperature, 25)
+                            ))
+                    );
+                }
+
+                if (temperature > 25 || pressure > 0.1) {
+                    data.UEL = Arith.mul(
+                            Arith.add(
+                                    data.UEL, Arith.mul(
+                                            20.6, Math.log10(pressure) + 1)
+                            ),
+                            Arith.add(
+                                    1, Arith.mul(
+                                            0.0008, Arith.sub(temperature, 25)
+                                    )
+                            )
+                    );
+                }
+                ELResult result = new ELResult(temperature, pressure, data, Arith.round(sum, DecimalScale));
+                callBack.onResult(result);
             }
         }).start();
     }
@@ -140,7 +169,7 @@ public class Calculator {
         double LEL;
         double UEL;
 
-        ELData(double LEL, double UEL) {
+        public ELData(double LEL, double UEL) {
             this.LEL = LEL;
             this.UEL = UEL;
         }
@@ -154,8 +183,38 @@ public class Calculator {
         }
     }
 
+    public static class ELResult {
+        double temperature;
+        double pressure;
+        ELData date;
+        double sum;
+
+        public ELResult(double temperature, double pressure, ELData date, double sum) {
+            this.temperature = temperature;
+            this.pressure = pressure;
+            this.date = date;
+            this.sum = sum;
+        }
+
+        public double getTemperature() {
+            return temperature;
+        }
+
+        public double getPressure() {
+            return pressure;
+        }
+
+        public ELData getDate() {
+            return date;
+        }
+
+        public double getSum() {
+            return sum;
+        }
+    }
+
     public interface OnCalculateCallBack {
-        void onResult(ELData result, double sum);
+        void onResult(ELResult result);
 
         void onError(String description);
     }

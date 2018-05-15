@@ -12,14 +12,18 @@ public class HistoryResultEntity {
 
     @Id
     private Long id;
+    private String temperature;
+    private String pressure;
     private String LEL;
     private String UEL;
     private String sum;
     private String detail;
-    @Generated(hash = 63707697)
-    public HistoryResultEntity(Long id, String LEL, String UEL, String sum,
-            String detail) {
+    @Generated(hash = 1795981070)
+    public HistoryResultEntity(Long id, String temperature, String pressure,
+            String LEL, String UEL, String sum, String detail) {
         this.id = id;
+        this.temperature = temperature;
+        this.pressure = pressure;
         this.LEL = LEL;
         this.UEL = UEL;
         this.sum = sum;
@@ -33,6 +37,18 @@ public class HistoryResultEntity {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+    public String getTemperature() {
+        return this.temperature;
+    }
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
+    }
+    public String getPressure() {
+        return this.pressure;
+    }
+    public void setPressure(String pressure) {
+        this.pressure = pressure;
     }
     public String getLEL() {
         return this.LEL;
@@ -58,6 +74,7 @@ public class HistoryResultEntity {
     public void setDetail(String detail) {
         this.detail = detail;
     }
+
 
 
 

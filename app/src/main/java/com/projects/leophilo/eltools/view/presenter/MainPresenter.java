@@ -11,6 +11,7 @@ import com.projects.leophilo.eltools.core.Calculator;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntity;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntityDao;
 import com.projects.leophilo.eltools.model.greendao.GreenDaoHelper;
+import com.projects.leophilo.eltools.tools.SPTool;
 import com.projects.leophilo.eltools.view.adapter.MainListAdapter;
 import com.projects.leophilo.eltools.view.presenter.contact.MainContact;
 
@@ -145,10 +146,18 @@ public class MainPresenter extends BasePresenter<MainContact.View> implements Ma
                 mView.showEditBar();
                 break;
             case editState_complete:
-                Calculator.calculate(adapter.getData(), new Calculator.OnCalculateCallBack() {
+                String currentTemperature = SPTool.getAppSP(mView.getViewContext()).getString(Calculator.TEMPERATURE, "25");
+                String currentPressure = SPTool.getAppSP(mView.getViewContext()).getString(Calculator.PRESSURE, "0.1");
+                Double currentTemperatureValue = Double.parseDouble(currentTemperature);
+                Double currentPressureValue = Double.parseDouble(currentPressure);
+                Calculator.calculate(
+                        currentTemperatureValue,
+                        currentPressureValue,
+                        adapter.getData(),
+                        new Calculator.OnCalculateCallBack() {
                     @Override
-                    public void onResult(Calculator.ELData result, double sum) {
-                        mView.showResult(result, sum, (ArrayList<NormalCompositionItemEntity>) adapter.getData());
+                    public void onResult(Calculator.ELResult result) {
+                        mView.showResult(result,(ArrayList<NormalCompositionItemEntity>) adapter.getData());
                     }
 
                     @Override

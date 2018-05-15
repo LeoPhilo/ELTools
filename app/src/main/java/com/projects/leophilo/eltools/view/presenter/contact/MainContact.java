@@ -1,5 +1,6 @@
 package com.projects.leophilo.eltools.view.presenter.contact;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.ArraySet;
 import android.view.View;
@@ -16,12 +17,13 @@ public interface MainContact extends BaseContact {
         void showToast(@NonNull String msg);
         void showCreateTip();
         void showEditBar();
-        void showResult(final Calculator.ELData result, final double sum, ArrayList<NormalCompositionItemEntity> entities);
+        void showResult(Calculator.ELResult result, ArrayList<NormalCompositionItemEntity> entities);
         void showManagingStateChangeAnim(android.view.View itemView, int itemType, boolean expectToDelete);
         void updateVolumeTextView(String updateData);
         void resetEditBar(boolean requestFocus);
         void reEditItem(NormalCompositionItemEntity entity);
         void notifyEditStateChanged(int state);
+        Context getViewContext();
     }
 
     interface Presenter extends BaseContact.IPresenter<View> {

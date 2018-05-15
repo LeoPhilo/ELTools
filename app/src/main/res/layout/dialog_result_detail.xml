@@ -30,6 +30,7 @@
 
                 <TextView
                     android:id="@+id/textLEL"
+                    android:maxLines="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -40,6 +41,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:maxLines="1"
                     android:id="@+id/textUEL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -51,6 +53,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textLEL" />
 
                 <TextView
+                    android:maxLines="1"
                     android:id="@+id/textVolume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -94,7 +97,25 @@
                     app:layout_constraintBaseline_toBaselineOf="@+id/textVolume"
                     app:layout_constraintStart_toStartOf="@+id/textView10" />
 
+                <TextView
+                    android:id="@+id/textTemperature"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <TextView
+                    android:id="@+id/textPressure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@android:color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textTemperature" />
 
 
             </android.support.constraint.ConstraintLayout>

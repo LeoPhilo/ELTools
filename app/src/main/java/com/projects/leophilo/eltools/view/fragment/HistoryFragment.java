@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.projects.leophilo.eltools.R;
+import com.projects.leophilo.eltools.core.Calculator;
 import com.projects.leophilo.eltools.model.entity.HistoryResultEntity;
 import com.projects.leophilo.eltools.model.entity.HistoryResultEntityDao;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntity;
@@ -59,15 +60,23 @@ public class HistoryFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (adapter instanceof HistoryListAdapter) {
-                    Type listType = new TypeToken<ArrayList<NormalCompositionItemEntity>>(){}.getType();
+                    Type listType = new TypeToken<ArrayList<NormalCompositionItemEntity>>() {
+                    }.getType();
                     ArrayList<NormalCompositionItemEntity> entities = new Gson()
                             .fromJson(((HistoryListAdapter) adapter).getItem(position).getDetail(), listType);
 
+                    Calculator.ELResult result = new Calculator.ELResult(
+                            Double.parseDouble(((HistoryListAdapter) adapter).getItem(position).getTemperature()),
+                            Double.parseDouble(((HistoryListAdapter) adapter).getItem(position).getPressure()),
+                            new Calculator.ELData(
+                                    Double.parseDouble(((HistoryListAdapter) adapter).getItem(position).getLEL()),
+                                    Double.parseDouble(((HistoryListAdapter) adapter).getItem(position).getUEL())
+                            ),
+                            Double.parseDouble(((HistoryListAdapter) adapter).getItem(position).getSum())
+                    );
+
                     ResultDetailDialog dialog = ResultDetailDialog.newInstance(
-                            ((HistoryListAdapter) adapter).getItem(position).getLEL()
-                            , ((HistoryListAdapter) adapter).getItem(position).getUEL()
-                            , ((HistoryListAdapter) adapter).getItem(position).getSum()
-                            , entities);
+                            result, entities);
 
                     dialog.setHideSaveAction(true);
                     dialog.show(getChildFragmentManager(), ResultDetailDialog.TAG);

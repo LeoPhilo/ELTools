@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.projects.leophilo.eltools.R;
+import com.projects.leophilo.eltools.core.Calculator;
 import com.projects.leophilo.eltools.model.entity.HistoryResultEntity;
 import com.projects.leophilo.eltools.model.entity.NormalCompositionItemEntity;
 import com.projects.leophilo.eltools.model.greendao.GreenDaoHelper;
@@ -28,6 +29,10 @@ public class ResultDetailDialog extends BaseDialogFragment {
 
     public static final String TAG = "ResultDetailDialog";
 
+    @BindView(R.id.textTemperature)
+    TextView textTemperature;
+    @BindView(R.id.textPressure)
+    TextView textPressure;
     @BindView(R.id.textLEL)
     TextView textLEL;
     @BindView(R.id.textUEL)
@@ -43,9 +48,10 @@ public class ResultDetailDialog extends BaseDialogFragment {
     void save() {
         String detail = new Gson().toJson(entities);
         HistoryResultEntity entity = new HistoryResultEntity(
-                System.currentTimeMillis()
-                , LEL, UEL
-                , sum, detail);
+                System.currentTimeMillis(),
+                temperature, pressure,
+                LEL, UEL,
+                sum, detail);
 
         GreenDaoHelper.getDaoSession().getHistoryResultEntityDao().insert(entity);
         this.getDialog().dismiss();
@@ -57,6 +63,8 @@ public class ResultDetailDialog extends BaseDialogFragment {
         this.getDialog().dismiss();
     }
 
+    private String temperature;
+    private String pressure;
     private String LEL;
     private String UEL;
     private String sum;
@@ -65,14 +73,16 @@ public class ResultDetailDialog extends BaseDialogFragment {
     private DialogInterface.OnDismissListener dismissListener;
 
     public static ResultDetailDialog newInstance(
-            String lel, String uel, String sum, ArrayList<NormalCompositionItemEntity> entities) {
+            Calculator.ELResult result, ArrayList<NormalCompositionItemEntity> entities) {
 
         Bundle args = new Bundle();
 
         ResultDetailDialog fragment = new ResultDetailDialog();
-        args.putString("LEL", lel);
-        args.putString("UEL", uel);
-        args.putString("SUM", sum);
+        args.putString("TEMPERATURE", result.getTemperature() + "");
+        args.putString("PRESSURE", result.getPressure() + "");
+        args.putString("LEL", result.getDate().getLEL() + "");
+        args.putString("UEL", result.getDate().getUEL() + "");
+        args.putString("SUM", result.getSum() + "");
         args.putParcelableArrayList("LIST", entities);
         fragment.setArguments(args);
         return fragment;
@@ -98,18 +108,27 @@ public class ResultDetailDialog extends BaseDialogFragment {
         Bundle args = getArguments();
 
         if (args != null) {
-            LEL = args.getString("LEL") + "%";
-            UEL = args.getString("UEL") + "%";
-            sum = args.getString("SUM") + "%";
+            temperature = args.getString("TEMPERATURE");
+            pressure = args.getString("PRESSURE");
+            LEL = args.getString("LEL");
+            UEL = args.getString("UEL");
+            sum = args.getString("SUM");
+            String temperatureStr = temperature + "℃";
+            String pressureStr = pressure + "Mpa";
+            String LELStr = LEL + "%";
+            String UELStr = UEL + "%";
+            String sumStr = sum + "%";
             entities = args.getParcelableArrayList("LIST");
 
             if (entities != null) {
                 Collections.sort(entities);
             }
 
-            textLEL.setText(LEL);
-            textUEL.setText(UEL);
-            textVolume.setText(sum);
+            textTemperature.setText(temperatureStr);
+            textPressure.setText(pressureStr);
+            textLEL.setText(LELStr);
+            textUEL.setText(UELStr);
+            textVolume.setText(sumStr);
 
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
 

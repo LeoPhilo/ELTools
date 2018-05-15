@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -167,7 +168,7 @@ public class MainFragment extends BaseFragment implements MainContact.View {
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
+//                                    dialog.dismiss();
                                 }
                             })
                             .create();
@@ -188,13 +189,10 @@ public class MainFragment extends BaseFragment implements MainContact.View {
     }
 
     @Override
-    public void showResult(final Calculator.ELData result, final double sum, final ArrayList<NormalCompositionItemEntity> entities) {
+    public void showResult(Calculator.ELResult result, ArrayList<NormalCompositionItemEntity> entities) {
         if (null == getActivity()) return;
         ResultDetailDialog dialog = ResultDetailDialog.newInstance(
-                Double.toString(result.getLEL()),
-                Double.toString(result.getUEL()),
-                Double.toString(sum)
-                , entities);
+                result, entities);
 
         dialog.show(getChildFragmentManager(), ResultDetailDialog.TAG);
         dialog.setDismissListener(new DialogInterface.OnDismissListener() {
@@ -232,7 +230,7 @@ public class MainFragment extends BaseFragment implements MainContact.View {
                     floatingActionButton.setImageResource(R.drawable.ic_check_black_24dp);
                     floatingToolbar.hide();
                 }
-            }, 500);
+            }, 888);
 
         }
     }
@@ -276,6 +274,12 @@ public class MainFragment extends BaseFragment implements MainContact.View {
                 }
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public Context getViewContext() {
+        return this.getContext();
     }
 
 }

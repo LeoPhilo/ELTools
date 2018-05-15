@@ -2,8 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_operation_adjust"
+        android:icon="@drawable/ic_tune_black_24dp"
+        android:title="@string/menu_operation_temperature"
+        app:showAsAction="always"/>
+    <!--<item-->
+        <!--android:id="@+id/menu_operation_pressure"-->
+        <!--android:icon="@drawable/ic_pressure"-->
+        <!--android:title="@string/menu_operation_pressure"-->
+        <!--app:showAsAction="always"/>-->
+    <!--<item-->
+        <!--android:id="@+id/menu_operation_temperature"-->
+        <!--android:icon="@drawable/ic_temperature"-->
+        <!--android:title="@string/menu_operation_temperature"-->
+        <!--app:showAsAction="always"/>-->
+    <item
         android:id="@+id/menu_operation_history"
         android:icon="@drawable/icon_history"
         android:title="@string/menu_operation_history"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
 </menu>
